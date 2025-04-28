@@ -1,3 +1,4 @@
+
 import React from 'react';
 import './Cart.css';
 import { FaTrash, FaPlus, FaMinus, FaShoppingCart, FaArrowRight } from 'react-icons/fa';
@@ -5,7 +6,7 @@ import { useCart } from '../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
-  const { cartItems, updateQuantity, removeFromCart, getCartTotal } = useCart();
+  const { cartItems, updateQuantity, removeFromCart, getCartTotal, clearCart } = useCart();
   const navigate = useNavigate();
 
   const handleCheckout = () => {
@@ -26,7 +27,6 @@ const Cart = () => {
     };
 
     localStorage.setItem('invoiceData', JSON.stringify(invoiceData));
-    localStorage.setItem('cart', JSON.stringify([]));
     navigate('/invoices');
   };
 

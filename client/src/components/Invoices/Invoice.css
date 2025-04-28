@@ -1,7 +1,29 @@
+
 .invoice-container {
     padding: 2rem;
     min-height: 100vh;
     font-family: 'Segoe UI', sans-serif;
+}
+
+.loading-invoice {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    font-size: 1.5rem;
+    color: #36933b;
+    font-weight: bold;
+    text-align: center;
+}
+
+.success-message {
+    text-align: center;
+    color: #388e3c;
+    font-weight: bold;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background-color: #e8f5e9;
 }
 
 .invoice-header {
@@ -134,6 +156,12 @@
     cursor: pointer;
 }
 
+.print-button:disabled {
+    background-color: #c8e6c9;
+    color: #2e7d32;
+    cursor: not-allowed;
+}
+
 .thank-you-text {
     margin-top: 1.5rem;
     font-style: italic;
@@ -145,6 +173,10 @@
     color: #43a047;
 }
 
-.icon:hover{
+.print-button:hover .icon {
     color: white;
+}
+
+.print-button:disabled .icon {
+    color: #2e7d32;
 }

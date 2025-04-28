@@ -1,38 +1,35 @@
+
 import React, { useEffect, useState } from 'react';
 import './Invoice.css';
 import { useCart } from '../../context/CartContext';
 import { FaCheckCircle, FaPhoneAlt, FaMapMarkerAlt, FaCalendarAlt, FaFileInvoiceDollar, FaPrint } from 'react-icons/fa';
 
 export default function Invoice() {
-  const { cartItems, getCartTotal } = useCart();
+  const { getCartTotal, clearCart } = useCart();
   const [invoiceData, setInvoiceData] = useState(null);
+  const [invoiceGenerated, setInvoiceGenerated] = useState(false);
 
   useEffect(() => {
-    const savedAddress = JSON.parse(localStorage.getItem('userAddress'));
-
-    const generatedData = {
-      orderId: 'ORD' + Math.floor(Math.random() * 1000000).toString().padStart(6, '0'),
-      orderDate: new Date().toLocaleString(),
-      fromAddress: savedAddress
-        ? `${savedAddress.street}, ${savedAddress.city}, ${savedAddress.state} - ${savedAddress.pin}`
-        : 'Xeno Health, Bangalore, Karnataka - 560001',
-      phone: savedAddress?.phone || 'N/A',
-      paymentMethod: 'Online Payment (UPI)',
-      deliveryEstimate: '8 April 2025',
-      status: 'Confirmed',
-      items: cartItems,
-      total: Math.round(getCartTotal() * 83),
-    };
-
-    localStorage.setItem('invoiceData', JSON.stringify(generatedData));
-    setInvoiceData(generatedData);
+    // Try to get the invoice data from localStorage first
+    const savedInvoiceData = localStorage.getItem('invoiceData');
+    
+    if (savedInvoiceData) {
+      // If there's saved invoice data, use it
+      setInvoiceData(JSON.parse(savedInvoiceData));
+    } else {
+      // If no saved data, show message or redirect
+      console.log("No invoice data found.");
+    }
   }, []);
 
   const handlePrint = () => {
+    // Clear the cart when invoice is generated
+    clearCart();
+    setInvoiceGenerated(true);
     window.print();
   };
 
-  if (!invoiceData) return <div>Loading Invoice...</div>;
+  if (!invoiceData) return <div className="loading-invoice">Loading Invoice...</div>;
 
   return (
     <div className="invoice-container">
@@ -63,7 +60,7 @@ export default function Invoice() {
           </tr>
         </thead>
         <tbody>
-          {invoiceData.items.map(item => (
+          {invoiceData.items && invoiceData.items.map(item => (
             <tr key={item.id}>
               <td>{item.title}</td>
               <td>{item.quantity}</td>
@@ -96,9 +93,10 @@ export default function Invoice() {
       </div>
     </div>
 
-    <button className="print-button" onClick={handlePrint}>
-      <FaPrint className="icon" /> Generate Invoice
+    <button className="print-button" onClick={handlePrint} disabled={invoiceGenerated}>
+      <FaPrint className="icon" /> {invoiceGenerated ? "Invoice Generated" : "Generate Invoice"}
     </button>
+    {invoiceGenerated && <p className="success-message">Invoice generated and cart cleared successfully!</p>}
   </div>
   );
 }

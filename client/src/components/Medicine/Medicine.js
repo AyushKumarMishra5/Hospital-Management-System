@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import './Medicine.css';
-import { FaStar, FaStarHalfAlt, FaShoppingCart, FaCheck, FaArrowRight } from 'react-icons/fa';
+import { FaStar, FaStarHalfAlt, FaShoppingCart, FaCheck, FaArrowRight, FaDolly } from 'react-icons/fa';
 import { useCart } from '../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,10 +37,9 @@ import medicineImg29 from '../asset/Med29.jpg';
 import medicineImg30 from '../asset/Med30.jpg';
 
 export default function Medicine() {
-  const { addToCart } = useCart();
+  const { addToCart, cartItems } = useCart();
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [cart, setCart] = useState([]);
   const [addedItems, setAddedItems] = useState({});
   const [showMoveToCart, setShowMoveToCart] = useState({});
 
@@ -320,13 +320,16 @@ export default function Medicine() {
 
     return stars;
   };
+  useEffect(() => {
+    const itemsInCart = {};
+    cartItems.forEach(item => {
+      itemsInCart[item.id] = true;
+    });
+    setAddedItems(itemsInCart);
+  }, [cartItems]);
   const handleAddToCart = (product) => {
     addToCart(product);
     setAddedItems(prev => ({ ...prev, [product.id]: true }));
-    setShowMoveToCart(prev => ({ ...prev, [product.id]: true }));
-    setTimeout(() => {
-      setAddedItems(prev => ({ ...prev, [product.id]: false }));
-    }, 2000);
   };
   const handleMoveToCart = () => {
     navigate('/cart');
@@ -405,18 +408,10 @@ export default function Medicine() {
                 <div className="medicine-card-actions">
                   <button 
                     className={`add-to-cart-btn ${addedItems[product.id] ? 'added' : ''}`}
-                    onClick={() => handleAddToCart(product)}
+                    onClick={() => addedItems[product.id] ? handleMoveToCart() : handleAddToCart(product)}
                   >
-                    {addedItems[product.id] ? <FaCheck /> : <FaShoppingCart />}
+                    {addedItems[product.id] ? <FaDolly /> : <FaShoppingCart />}
                   </button>
-                  {showMoveToCart[product.id] && (
-                    <button 
-                      className="move-to-cart-btn"
-                      onClick={handleMoveToCart}
-                    >
-                      <FaArrowRight /> Move to Cart
-                    </button>
-                  )}
                 </div>
               </div>
               <div className="medicine-card-content">
