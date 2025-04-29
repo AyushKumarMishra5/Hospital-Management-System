@@ -379,17 +379,6 @@ export default function Appointment() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const {patientName, patientEmail, doctor, visitType, date, time} = newAppointment;
-    Axios.post('http://localhost:5000/patient', {patientName, patientEmail, doctor, visitType, date, time})
-    .then((result) => {
-      alert("Form Submitted!")
-      console.log(result)
-    })
-    .catch((err)=> {
-      alert("Error submiitng the form!")
-      console.log(err)
-    })
-    
     
     if (isSubmitting) return;
     
@@ -401,6 +390,67 @@ export default function Appointment() {
     if (!newAppointment.patientName) {
       alert('Please enter your name');
       return;
+    }
+
+    const {patientName, patientEmail, doctor, visitType, date, time} = newAppointment;
+    
+    try {
+      setIsSubmitting(true);
+      
+      // MongoDB me data save karne ke liye API call
+      const response = await Axios.post('http://localhost:5000/patient', {
+        patientName,
+        patientEmail, 
+        doctor,
+        visitType,
+        date,
+        time,
+        status: 'Confirmed'
+      });
+
+      if (response.data) {
+        console.log('Appointment saved:', response.data);
+        
+        // Email bhejne ka function call karo
+        await sendConfirmationEmail({
+          ...newAppointment,
+          id: response.data._id // MongoDB se mile ID ko use karo
+        });
+        
+        // UI update karo
+        const updatedAllAppointments = [...allAppointments, {
+          ...newAppointment,
+          id: response.data._id,
+          status: 'Confirmed'
+        }];
+        
+        setAllAppointments(updatedAllAppointments);
+        setAppointments(prev => [...prev, {
+          ...newAppointment,
+          id: response.data._id,
+          status: 'Confirmed'
+        }]);
+        
+        // Form reset karo
+        setNewAppointment({
+          patientId: currentUser.id,
+          patientName: '',
+          patientEmail: '',
+          doctor: '',
+          visitType: '',
+          date: '',
+          time: '',
+          status: 'Confirmed'
+        });
+        
+        setShowScheduleForm(false);
+        alert('Appointment successfully booked! Confirmation email ' + newAppointment.patientEmail + ' sent on Email');
+      }
+    } catch (error) {
+      console.error('Error in appointment submission:', error);
+      alert('Appointment book error. try again');
+    } finally {
+      setIsSubmitting(false);
     }
 
     // Double-check if the doctor is still available (prevents race conditions)
