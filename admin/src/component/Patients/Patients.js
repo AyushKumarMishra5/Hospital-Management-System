@@ -76,110 +76,81 @@ export default function Appointment() {
 
   // ---------- LIFECYCLE METHODS ---------- //
   
-  // Component load hone par appointments ko localStorage se fetch karo
+  // WebSocket connection setup
   useEffect(() => {
-    // Clear localStorage sample data on first load (uncomment this line to reset data)
-    // localStorage.removeItem('appointments');
-    
-    // LocalStorage se appointments ko get karo
-    const savedAppointments = localStorage.getItem('appointments');
-    
-    // Client appointments ko bhi get karo
-    const clientAppointments = localStorage.getItem('clientAppointments');
-    
-    let allAppointments = [];
-    let shouldSetSampleData = false;
-    
-    if (savedAppointments) {
-      try {
-        // Agar appointments hai to unko parse karo
-        const parsedAppointments = JSON.parse(savedAppointments);
-        
-        // Check if data is valid (contains necessary fields)
-        if (Array.isArray(parsedAppointments) && parsedAppointments.length > 0) {
-          // Date strings ko Date objects me convert karo
-          const appointmentsWithDates = parsedAppointments.map(appointment => ({
-            ...appointment,
-            date: new Date(appointment.date),
-            source: 'admin' // Mark as admin appointment
-          }));
-          
-          allAppointments = [...appointmentsWithDates];
-        } else {
-          // If data is invalid, we'll set sample data
-          shouldSetSampleData = true;
-        }
-      } catch (error) {
-        console.error("Error parsing admin appointments:", error);
-        shouldSetSampleData = true;
+    const ws = new WebSocket('ws://localhost:5000');
+
+    ws.onopen = () => {
+      console.log('WebSocket Connected');
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'appointment_update') {
+        // Automatically update appointments when new data is received
+        fetchAppointments();
       }
-    } else {
-      shouldSetSampleData = true;
-    }
-    
-    // Process client appointments if they exist
-    if (clientAppointments) {
-      try {
-        const parsedClientAppointments = JSON.parse(clientAppointments);
-        
-        if (Array.isArray(parsedClientAppointments) && parsedClientAppointments.length > 0) {
-          // Convert client appointments to the format used in admin panel
-          const formattedClientAppointments = parsedClientAppointments.map(clientApp => ({
-            id: clientApp.id,
-            name: clientApp.patientName || "Unknown Patient",
-            date: new Date(clientApp.date),
-            startTime: clientApp.time,
-            endTime: addMinutesToTime(clientApp.time, 30), // Add 30 mins by default
-            purpose: clientApp.visitType || "Consultation",
-            doctor: clientApp.doctor,
-            status: clientApp.status || "Confirmed",
-            description: `Patient Email: ${clientApp.patientEmail || "No email provided"}`,
-            shareVia: {
-              email: true,
-              sms: false,
-              whatsapp: false
-            },
-            source: 'client' // Mark as client appointment
-          }));
-          
-          // Add client appointments to allAppointments
-          allAppointments = [...allAppointments, ...formattedClientAppointments];
-        }
-      } catch (error) {
-        console.error("Error parsing client appointments:", error);
-      }
-    }
-    
-    if (allAppointments.length > 0) {
-      setAppointments(allAppointments);
-    } else if (shouldSetSampleData) {
-      // Only set sample data if we have no valid appointments
-      const sampleAppointments = [
-        { 
-          id: 1, 
-          name: 'Manjeet Singh', 
-          date: new Date(2023, 6, 14), 
-          startTime: '07:00', 
-          endTime: '09:00', 
-          purpose: 'Checkup',
-          doctor: 'Dr. Alok Pandey',
-          status: 'Confirmed',
-          description: 'Sample appointment data',
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket Error:', error);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket Disconnected');
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
+
+  // Component load hone par appointments ko fetch karo
+  const fetchAppointments = async () => {
+    try {
+      // MongoDB से सभी appointments को fetch करो
+      const response = await fetch('http://localhost:5000/patient');
+      const data = await response.json();
+      
+      if (Array.isArray(data) && data.length > 0) {
+        // MongoDB से आए appointments को admin panel के format में convert करो
+        const formattedAppointments = data.map(appointment => ({
+          id: appointment._id,
+          name: appointment.patientName || "Unknown Patient",
+          date: new Date(appointment.date),
+          startTime: appointment.time,
+          endTime: addMinutesToTime(appointment.time, 30), // Add 30 mins by default
+          purpose: appointment.visitType || "Consultation",
+          doctor: appointment.doctor,
+          status: appointment.status || "Confirmed",
+          description: `Patient Email: ${appointment.patientEmail || "No email provided"}`,
           shareVia: {
             email: true,
-            sms: true,
+            sms: false,
             whatsapp: false
           },
-          source: 'admin',
-          more: 2 
-        },
-      ];
-      
-      setAppointments(sampleAppointments);
-      // Sample data ko localStorage me save karo
-      localStorage.setItem('appointments', JSON.stringify(sampleAppointments));
+          source: 'client' // Mark all appointments as client appointments
+        }));
+        
+        setAppointments(formattedAppointments);
+      } else {
+        // If no appointments found, set empty array
+        setAppointments([]);
+      }
+    } catch (error) {
+      console.error("Error fetching appointments:", error);
+      // Show error message to admin
+      alert('Error loading appointments. Please try again.');
     }
+  };
 
+  // Initial fetch
+  useEffect(() => {
+    fetchAppointments();
+  }, []);
+
+  // Initialize doctors list
+  useEffect(() => {
     // Doctors ki list ko set karo
     if (Array.isArray(doctorsList)) {
       setDoctors(doctorsList.map(doctor => ({
@@ -194,7 +165,7 @@ export default function Appointment() {
       setCurrentDoctor(dentist || doctorsList[0]);
     }
   }, []);
-  
+
   // Helper function to add minutes to time string (HH:MM format)
   const addMinutesToTime = (timeStr, minutes) => {
     if (!timeStr) return "09:00";
