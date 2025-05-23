@@ -81,13 +81,10 @@ app.get('/patient', (req, res) => {
 });
 
 
-// Create HTTP server
 const server = http.createServer(app);
 
-// Create WebSocket server
 const wss = new WebSocket.Server({ server });
 
-// WebSocket connection handler
 wss.on('connection', (ws) => {
     console.log('New WebSocket client connected');
 
@@ -96,7 +93,6 @@ wss.on('connection', (ws) => {
     });
 });
 
-// Function to broadcast appointment updates to all connected clients
 const broadcastAppointmentUpdate = () => {
     wss.clients.forEach((client) => {
         if (client.readyState === WebSocket.OPEN) {
@@ -105,12 +101,11 @@ const broadcastAppointmentUpdate = () => {
     });
 };
 
-// Modify appointment routes to broadcast updates
 app.post('/patient', (req, res)=>{
     patientModel.create(req.body)
     .then((data)=> {
         res.json(data);
-        broadcastAppointmentUpdate(); // Broadcast update after successful creation
+        broadcastAppointmentUpdate();
     })
     .catch((err)=> res.json(err))
 });
@@ -121,7 +116,6 @@ app.get('/patient', (req, res) => {
     .catch((err) => res.json(err));
 });
 
-// Start server
 server.listen(PORT, () => {
     console.log(`Server is connected to http://localhost:${PORT}`);
     console.log(`WebSocket server is running on ws://localhost:${PORT}`);
