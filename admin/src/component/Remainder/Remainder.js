@@ -64,6 +64,7 @@ export default function Remainder() {
         : {
             name: formData.name,
             custom_message: formData.message,
+            user_email: formData.email,
           };
 
     try {
@@ -93,7 +94,6 @@ export default function Remainder() {
         Notify patients before their appointments with custom messages.
       </p>
 
-      {/* 30 Minutes Before */}
       <div className="reminder-card">
         <h2><i className="fas fa-clock"></i> 30 Minutes Before</h2>
 
@@ -145,8 +145,6 @@ export default function Remainder() {
           <i className="fas fa-paper-plane"></i> Send Notification
         </button>
       </div>
-
-      {/* 5 Minutes Before */}
       <div className="reminder-card">
         <h2><i className="fas fa-stopwatch"></i> 5 Minutes Before</h2>
 

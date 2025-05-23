@@ -14,7 +14,7 @@ const Login = ({ onLogin }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:5000/login', { email, password })
+    Axios.post('https://hospital-management-system-p9bo.onrender.com/login', { email, password })
       .then((result) => {
         console.log(result);
         onLogin();

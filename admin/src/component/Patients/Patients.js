@@ -109,7 +109,7 @@ export default function Appointment() {
   const fetchAppointments = async () => {
     try {
       // MongoDB से सभी appointments को fetch करो
-      const response = await fetch('http://localhost:5000/patient');
+      const response = await fetch('https://hospital-management-system-p9bo.onrender.com0/patient');
       const data = await response.json();
       
       if (Array.isArray(data) && data.length > 0) {
@@ -138,9 +138,9 @@ export default function Appointment() {
         setAppointments([]);
       }
     } catch (error) {
-      console.error("Error fetching appointments:", error);
+      // console.error("Error fetching appointments:", error);
       // Show error message to admin
-      alert('Error loading appointments. Please try again.');
+      // alert('Error loading appointments. Please try again.');
     }
   };
 

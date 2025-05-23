@@ -19,7 +19,7 @@ const Signin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    Axios.post('http://localhost:5000/user', {firstName, lastName, email, phone, password, confirmPassword})
+    Axios.post('https://hospital-management-system-p9bo.onrender.com/user', {firstName, lastName, email, phone, password, confirmPassword})
     .then(result => {
       console.log(result);
       Navigate('/login');

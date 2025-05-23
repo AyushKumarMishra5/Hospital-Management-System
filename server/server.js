@@ -15,7 +15,7 @@ const patientModel = require('./model/patient')
 
 app.use(cors(
    {
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["https://xenohealth.netlify.app/", "https://xenohealthpanel.netlify.app/"],
     methods: ["POST", "GET"],
     credentials: true
    } 
@@ -36,26 +36,31 @@ app.post('/user', (req, res)=>{
     .catch(err => res.json(err))
 })
 
-app.post('/login', (req, res)=>{
-    const {email, password} = req.body;
-    userModel.findOne({email:email})
-    .then(user=>{
-        if(user)
-        {
-            if(user.password === password){
-                res.json("Success")
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required." });
+    }
+
+    userModel.findOne({ email })
+        .then(user => {
+            if (!user) {
+                return res.status(404).json({ message: "No record existed!" });
             }
-            else{
-                res.json("The password is incorrect!")
+
+            if (user.password === password) {
+                return res.status(200).json({ message: "Success", user });
+            } else {
+                return res.status(401).json({ message: "The password is incorrect!" });
             }
-            
-        }
-        else
-        {
-            res.json("No record existed!")
-        }
-    })
-})
+        })
+        .catch(err => {
+            console.error("Login error:", err);
+            return res.status(500).json({ message: "Internal server error" });
+        });
+});
+
 
 app.post('/data', (req, res)=>{
     campaignModel.create(req.body)

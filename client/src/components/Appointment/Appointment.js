@@ -398,7 +398,7 @@ export default function Appointment() {
       setIsSubmitting(true);
       
       // MongoDB me data save karne ke liye API call
-      const response = await Axios.post('http://localhost:5000/patient', {
+      const response = await Axios.post('https://hospital-management-system-p9bo.onrender.com/patient', {
         patientName,
         patientEmail, 
         doctor,

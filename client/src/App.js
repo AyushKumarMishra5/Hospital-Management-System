@@ -1,7 +1,7 @@
 import './App.css';
 import Sidebar from './components/Sidebar/Sidebar';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import { useState } from 'react';
+import { useState } from 'react';
 
 import { CartProvider } from './context/CartContext'
 
@@ -17,29 +17,29 @@ import Reception from './components/Reception/Reception';
 import Service from './components/Services/Service';
 import Settings from './components/Settings/Setting';
 import Doctors from './components/Doctors/Doctors';
-// import Landing from './authentication/Landing';
-// import Login from './authentication/login';
-// import Signin from './authentication/signin';
+import Landing from './authentication/Landing';
+import Login from './authentication/login';
+import Signin from './authentication/signin';
 import Cart from './components/Cart/Cart';
 
 function App() {
-  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // const handleLogin = () => {
-  //   setIsAuthenticated(true);
-  // };
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
 
-  // const handleSignin = () => {
-  //   setIsAuthenticated(true);
-  // };
+  const handleSignin = () => {
+    setIsAuthenticated(true);
+  };
 
   return (
     <BrowserRouter>
-      {/* {!isAuthenticated ? ( */}
+      {!isAuthenticated ? (
         <Routes>
-          {/* <Route path="/" element={<Landing />} /> */}
-          {/* <Route path="/login" element={<Login onLogin={handleLogin} />} />
-          <Route path="/signin" element={<Signin onSubmit={handleSignin} />} /> */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/signin" element={<Signin onSubmit={handleSignin} />} />
         </Routes>
       ) : (
         <CartProvider>
@@ -65,6 +65,7 @@ function App() {
         </CartProvider>
 
       )
+    }
     </BrowserRouter>
   );
 }
