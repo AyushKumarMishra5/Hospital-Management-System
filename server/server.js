@@ -16,7 +16,9 @@ const patientModel = require('./model/patient')
 const corsOptions = {
   origin: [
     "https://xenohealth.netlify.app",
-    "https://xenohealthpanel.netlify.app"
+    "https://xenohealthpanel.netlify.app",
+    "http://localhost:3000",
+    "http://localhost:3001",
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
