@@ -5,6 +5,29 @@
 The **Hospital Management System (HMS)** is a full-stack web application designed to streamline hospital operations, ensuring efficient management of **patient records, appointments, billing, staff, inventory, and reports**. Built using **React.js, Next.js, MongoDB, Express.js, and Node.js**, this system provides a **responsive and user-friendly dashboard** for seamless hospital administration.
 
 ---
+## ScreenShots
+![1](https://github.com/user-attachments/assets/535bba25-2058-4a57-a2bb-7397f5bf1b2e)
+![2](https://github.com/user-attachments/assets/4e7f30b6-b06b-4891-9473-03de6ccbedcd)
+![3](https://github.com/user-attachments/assets/3967eede-85fd-4fef-bba9-6c452922fc79)
+![13](https://github.com/user-attachments/assets/f7531bf2-81cc-4d84-8e3b-c6012205282b)
+![4](https://github.com/user-attachments/assets/9d423a55-87ae-4375-97ac-170644a6cb59)
+![5](https://github.com/user-attachments/assets/301522ba-a4f8-4982-8b49-2e2443e09076)
+![6](https://github.com/user-attachments/assets/7dba95ac-190d-4b6b-977e-a9fdcb3997ee)
+![7](https://github.com/user-attachments/assets/a082a78c-3f78-4b33-ba73-0b1da1c76543)
+![7](https://github.com/user-attachments/assets/25b4112a-7559-49a1-ab53-db7b8492f24f)
+![9](https://github.com/user-attachments/assets/1b47d7d6-131a-4f1a-a375-a62145429a0f)
+![10](https://github.com/user-attachments/assets/8e9aff00-9a29-46f8-a029-c1a747b6322b)
+![11](https://github.com/user-attachments/assets/3b3e21f9-8260-4c0a-8272-e8a3e8ed139d)
+![11](https://github.com/user-attachments/assets/10e64e37-ef15-4b5d-b50d-7850e47e33e2)
+![14](https://github.com/user-attachments/assets/49fcac28-d000-4fff-a826-e7506571db7c)
+![14](https://github.com/user-attachments/assets/5db29641-07b4-4525-a124-3608c6ad71ad)
+![14](https://github.com/user-attachments/assets/7f7f5bab-23ed-4bdd-b4b5-740ecb5b2781)
+![17](https://github.com/user-attachments/assets/15f1b683-8980-4b7f-ae67-7eab2580fb2c)
+![18](https://github.com/user-attachments/assets/dc8e57ac-15ec-4d04-b707-5a4aee856b3e)
+![19](https://github.com/user-attachments/assets/d6969077-0a7d-4613-aaa9-6d4cf3870a91)
+
+
+
 
 ## Features
 
